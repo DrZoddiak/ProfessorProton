@@ -1,7 +1,6 @@
 package io.github.nucleuspowered.proton;
 
 import net.dv8tion.jda.core.entities.TextChannel;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;
@@ -17,21 +16,14 @@ import java.io.Serializable;
 @Plugin(name = "Discord", category = "Core", elementType = "appender", printObject = true)
 public class DiscordAppender extends AbstractAppender {
 
-    private TextChannel channel;
-
     protected DiscordAppender(String name, Filter filter, Layout<? extends Serializable> layout, final boolean ignoreExceptions) {
         super(name, filter, layout, ignoreExceptions);
     }
 
     @Override
     public void append(LogEvent event) {
-        if (channel == null && ProfessorProton.getInstance() != null && ProfessorProton.getInstance().getBot() != null
-                && StringUtils.isNotBlank(ProfessorProton.getInstance().getConfig().getDiscord().getConsoleChannelID())) {
-            channel = ProfessorProton.getInstance().getBot()
-                    .getTextChannelById(ProfessorProton.getInstance().getConfig().getDiscord().getConsoleChannelID());
-        }
-        if (channel != null && channel.canTalk()) {
-            channel.sendMessage(event.getMessage().getFormattedMessage()).queue();
+        if (ProfessorProton.getInstance() != null && ProfessorProton.getInstance().getBot() != null) {
+            ProfessorProton.getInstance().getConsole().ifPresent(c -> c.sendMessage(event.getMessage().getFormattedMessage()).queue());
         }
     }
 

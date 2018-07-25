@@ -15,10 +15,12 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +41,8 @@ public class ProfessorProton {
     private BotConfig config;
 
     private JDA jda;
+
+    private TextChannel console;
 
     private Map<Guild, Cache<String, Message>> guildCacheMap = Maps.newHashMap();
 
@@ -89,6 +93,11 @@ public class ProfessorProton {
             t.run();
         }
 
+        // Setup console channel
+        if (StringUtils.isNotBlank(config.getDiscord().getConsoleChannelID())) {
+            console = jda.getTextChannelById(config.getDiscord().getConsoleChannelID());
+        }
+
         LOGGER.info("Bot initialization complete.");
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -119,6 +128,10 @@ public class ProfessorProton {
 
     public BotConfig getConfig() {
         return config;
+    }
+
+    public Optional<TextChannel> getConsole() {
+        return Optional.ofNullable(console);
     }
 
     public ConfigManager getConfigManager() {

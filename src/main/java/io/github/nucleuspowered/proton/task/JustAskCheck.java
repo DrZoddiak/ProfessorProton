@@ -2,6 +2,7 @@ package io.github.nucleuspowered.proton.task;
 
 import io.github.nucleuspowered.proton.ProfessorProton;
 import io.github.nucleuspowered.proton.config.JustAskConfig;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -23,16 +24,35 @@ public class JustAskCheck extends BaseTask {
 
         JustAskConfig config = ProfessorProton.getInstance().getConfig().getJustAsk();
         ProfessorProton.LOGGER.debug("Testing {}'s message for asking to ask.", event.getMember().getEffectiveName());
+        String content = event.getMessage().getContentStripped().toLowerCase();
 
         // Check if the message matches any of the predefined phrases
-        if (config.getPhases().stream().anyMatch(s ->
-                StringUtils.getJaroWinklerDistance(s.toLowerCase(), event.getMessage().getContentStripped().toLowerCase()) >= config.getMatch())) {
-            if (!suppressWarnings) {
-                event.getChannel().sendMessage(config.getMessage().replace("{{user}}", event.getMember().getAsMention())).queue();
-                ProfessorProton.getInstance().getLastWarning().put(event.getAuthor(), event.getMessage().getCreationTime().toInstant());
-            }
-            ProfessorProton.LOGGER.info("Detected {} \"asking to ask\".", event.getMember().getEffectiveName());
-        }
+        config.getPhases().stream()
+                .filter(s -> StringUtils.getJaroWinklerDistance(s.toLowerCase(), content) >= config.getMatch())
+                .findAny()
+                .ifPresent(s -> {
+                    if (!suppressWarnings) {
+                        event.getChannel().sendMessage(config.getMessage().replace("{{user}}", event.getMember().getAsMention())).queue();
+                        ProfessorProton.getInstance().getLastWarning().put(event.getAuthor(), event.getMessage().getCreationTime().toInstant());
+                    }
+                    ProfessorProton.getInstance().getConsole().ifPresent(c -> c.sendMessage(new EmbedBuilder()
+                            .setTitle("Detected \"asking to ask\"")
+                            .setThumbnail(event.getAuthor().getAvatarUrl())
+                            .setDescription(Math.round(StringUtils.getJaroWinklerDistance(s.toLowerCase(), content) * 100) + "% similar")
+                            .setTimestamp(event.getMessage().getCreationTime())
+                            .addField("Author", event.getAuthor().getAsMention(), false)
+                            .addField("Channel", event.getChannel().getAsMention(), true)
+                            .addField("Message", event.getMessage().getContentRaw(), true)
+                            .addField("Match", s, false)
+                            .build()
+                    ).queue());
+                    ProfessorProton.LOGGER.debug("Detected {} \"asking to ask\"", event.getMember().getEffectiveName());
+                    ProfessorProton.LOGGER.debug("{}% similar:\nUser:\t{}\nMatch:\t{}",
+                            Math.round(StringUtils.getJaroWinklerDistance(s.toLowerCase(), content) * 100),
+                            content,
+                            s
+                    );
+                });
 
         sw.stop();
         ProfessorProton.LOGGER.debug("Testing for asking to ask completed in {}ms", sw.getTime(TimeUnit.MILLISECONDS));

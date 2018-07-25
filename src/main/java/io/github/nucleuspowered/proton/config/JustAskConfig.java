@@ -10,7 +10,7 @@ import java.util.List;
 public class JustAskConfig {
 
     @Setting
-    private double match = 0.80;
+    private double match = 0.85;
 
     @Setting
     private String message = "{{user}} Please do not ask to ask. You may have to wait for a response and you haven't even asked your question yet!\n"
@@ -18,7 +18,7 @@ public class JustAskConfig {
 
     @Setting
     private List<String> phases = Lists.newArrayList("Can someone help me", "Can I ask a question", "I have a question",
-            "Anyone here who can help me", "I need help", "Help", "Help me", "Please help me", "Help me please");
+            "Anyone here who can help me", "I need help", "Help", "Help me", "Please help me", "Help me please", "Could anyone help me out");
 
     public double getMatch() {
         return match;
