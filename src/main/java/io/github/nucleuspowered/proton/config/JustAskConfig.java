@@ -10,7 +10,7 @@ import java.util.List;
 public class JustAskConfig {
 
     @Setting
-    private double match = 0.85;
+    private double match = 0.90;
 
     @Setting
     private String message = "{{user}} Please do not ask to ask. You may have to wait for a response and you haven't even asked your question yet!\n"

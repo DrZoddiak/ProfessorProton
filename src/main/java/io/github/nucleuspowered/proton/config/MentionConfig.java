@@ -11,6 +11,8 @@ public class MentionConfig {
     @Setting
     private String message = "{{user}} Please do not tag the developers or support unless you are requested to do so!\n"
             + "Please review <#ID> for more details.";
+    @Setting
+    private String everyoneMessage = "{{user}} you just tried to mention {{members}} members! That is incredibly rude. Please be patient.";
 
     public boolean isWarnOnMention() {
         return warnOnMention;
@@ -18,5 +20,9 @@ public class MentionConfig {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getEveryoneMessage() {
+        return everyoneMessage;
     }
 }
