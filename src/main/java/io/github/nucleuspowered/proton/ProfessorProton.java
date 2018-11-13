@@ -78,7 +78,8 @@ public class ProfessorProton {
                 .addEventListener(new MessageListener())
                 .addEventListener(new PrivateMessageListener())
                 .addEventListener(new MentionListener())
-                .buildBlocking();
+                .build()
+                .awaitReady();
 
         // Generate a message cache for each guild
         for (Guild guild : jda.getGuilds()) {
