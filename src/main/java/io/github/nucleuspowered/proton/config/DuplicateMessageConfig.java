@@ -6,7 +6,7 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 @ConfigSerializable
 public class DuplicateMessageConfig {
 
-    @Setting
+    @Setting(comment = "The number of duplicate messages to detect before warning. Set to 0 to disable.")
     private int warnThreshold = 2;
     @Setting
     private double match = 0.90;

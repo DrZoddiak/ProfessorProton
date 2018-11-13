@@ -11,6 +11,8 @@ public class BotConfig {
     @Setting
     private CacheConfig cache = new CacheConfig();
     @Setting
+    private CommandConfig command = new CommandConfig();
+    @Setting
     private MentionConfig mention = new MentionConfig();
     @Setting
     private SupportConfig support = new SupportConfig();
@@ -27,6 +29,10 @@ public class BotConfig {
 
     public CacheConfig getCache() {
         return cache;
+    }
+
+    public CommandConfig getCommand() {
+        return command;
     }
 
     public MentionConfig getMention() {
