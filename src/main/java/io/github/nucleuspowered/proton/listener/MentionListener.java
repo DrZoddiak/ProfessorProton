@@ -20,7 +20,7 @@ public class MentionListener extends ListenerAdapter {
             if (config.isWarnOnMention()) {
                 for (Member mention : event.getMessage().getMentionedMembers()) {
                     // Mention member's with roles
-                    if (!mention.getRoles().isEmpty()) {
+                    if (!mention.getUser().isBot() && !mention.getRoles().isEmpty()) {
                         event.getChannel().sendMessage(config.getMessage().replace("{{user}}", event.getMember().getAsMention())).queue();
                         ProfessorProton.getInstance().getConsole().ifPresent(c -> c.sendMessage(new EmbedBuilder()
                                 .setTitle("Detected user mentioning staff")
