@@ -50,7 +50,7 @@ public class MessageListener extends ListenerAdapter {
 
         // Just Ask Check
         // Only check members without a role, when enabled
-        if (ProfessorProton.getInstance().getConfig().getDuplicateMessage().isEnabled()) {
+        if (ProfessorProton.getInstance().getConfig().getJustAsk().isEnabled()) {
             new Thread(new JustAskCheck(event, suppressWarnings), "just-ask").start();
         }
     }
