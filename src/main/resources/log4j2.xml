@@ -24,8 +24,10 @@
     <Loggers>
         <Root level="debug" additivity="false">
             <AppenderRef ref="Console" level="info"/>
-            <AppenderRef ref="Discord" level="info"/>
             <AppenderRef ref="LogFile"/>
         </Root>
+        <Logger name="io.github.nucleuspowered.proton" additivity="false">
+            <AppenderRef ref="Discord" level="info"/>
+        </Logger>
     </Loggers>
 </Configuration>

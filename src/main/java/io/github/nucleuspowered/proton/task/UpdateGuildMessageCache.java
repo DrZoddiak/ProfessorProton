@@ -2,11 +2,11 @@ package io.github.nucleuspowered.proton.task;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import io.github.nucleuspowered.proton.ProfessorProton;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.utils.PermissionUtil;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.internal.utils.PermissionUtil;
 
 public class UpdateGuildMessageCache implements Runnable {
 
@@ -26,6 +26,6 @@ public class UpdateGuildMessageCache implements Runnable {
                 cache.put(message.getId(), message);
             }
         });
-        ProfessorProton.LOGGER.info("Finished updating {} message cache.", guild.getName());
+        ProfessorProton.LOGGER.info("Finished updating the `{}` message cache.", guild.getName());
     }
 }

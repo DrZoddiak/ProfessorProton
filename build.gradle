@@ -43,7 +43,7 @@ dependencies {
     compile("org.apache.logging.log4j:log4j-api:2.11.0")
     compile("org.apache.logging.log4j:log4j-core:2.11.0")
     runtime("org.apache.logging.log4j:log4j-slf4j-impl:2.11.0")
-    compile("net.dv8tion:JDA:3.8.1_441")
+    implementation("net.dv8tion:JDA:4.0.0_39")
     compile("ninja.leaping.configurate:configurate-hocon:3.3")
     compile("com.github.ben-manes.caffeine:caffeine:2.6.2")
     compile("com.h2database:h2:1.4.197")

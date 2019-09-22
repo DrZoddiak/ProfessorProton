@@ -1,8 +1,8 @@
 package io.github.nucleuspowered.proton.listener;
 
 import io.github.nucleuspowered.proton.ProfessorProton;
-import net.dv8tion.jda.core.events.message.priv.PrivateMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class PrivateMessageListener extends ListenerAdapter {
 

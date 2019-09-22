@@ -2,11 +2,11 @@ package io.github.nucleuspowered.proton.listener;
 
 import io.github.nucleuspowered.proton.ProfessorProton;
 import io.github.nucleuspowered.proton.config.CommandConfig;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.utils.PermissionUtil;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.internal.utils.PermissionUtil;
 import org.apache.commons.lang3.StringUtils;
 
 public class CommandListener extends ListenerAdapter {

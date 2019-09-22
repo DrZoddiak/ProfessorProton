@@ -2,10 +2,10 @@ package io.github.nucleuspowered.proton.listener;
 
 import io.github.nucleuspowered.proton.ProfessorProton;
 import io.github.nucleuspowered.proton.config.MentionConfig;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.util.regex.Pattern;
 
@@ -25,7 +25,7 @@ public class MentionListener extends ListenerAdapter {
                         ProfessorProton.getInstance().getConsole().ifPresent(c -> c.sendMessage(new EmbedBuilder()
                                 .setTitle("Detected user mentioning staff")
                                 .setThumbnail(event.getAuthor().getAvatarUrl())
-                                .setTimestamp(event.getMessage().getCreationTime())
+                                .setTimestamp(event.getMessage().getTimeCreated())
                                 .addField("Author", event.getAuthor().getAsMention(), false)
                                 .addField("Channel", event.getChannel().getAsMention(), true)
                                 .addField("Message", event.getMessage().getContentRaw(), true)
@@ -44,7 +44,7 @@ public class MentionListener extends ListenerAdapter {
                     ProfessorProton.getInstance().getConsole().ifPresent(c -> c.sendMessage(new EmbedBuilder()
                             .setTitle("Detected user mentioning everyone")
                             .setThumbnail(event.getAuthor().getAvatarUrl())
-                            .setTimestamp(event.getMessage().getCreationTime())
+                            .setTimestamp(event.getMessage().getTimeCreated())
                             .addField("Author", event.getAuthor().getAsMention(), false)
                             .addField("Channel", event.getChannel().getAsMention(), true)
                             .addField("Message", event.getMessage().getContentRaw(), true)

@@ -1,6 +1,5 @@
 package io.github.nucleuspowered.proton;
 
-import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LogEvent;

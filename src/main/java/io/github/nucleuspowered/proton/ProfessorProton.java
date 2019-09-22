@@ -10,14 +10,14 @@ import io.github.nucleuspowered.proton.listener.MentionListener;
 import io.github.nucleuspowered.proton.listener.MessageListener;
 import io.github.nucleuspowered.proton.listener.PrivateMessageListener;
 import io.github.nucleuspowered.proton.task.UpdateGuildMessageCache;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -75,11 +75,13 @@ public class ProfessorProton {
     private void initDiscordBot() throws LoginException, InterruptedException {
         jda = new JDABuilder(AccountType.BOT)
                 .setToken(config.getDiscord().getToken())
-                .setGame(Game.playing(config.getDiscord().getGame()))
-                .addEventListener(new CommandListener())
-                .addEventListener(new MessageListener())
-                .addEventListener(new PrivateMessageListener())
-                .addEventListener(new MentionListener())
+                .setActivity(Activity.playing(config.getDiscord().getGame()))
+                .addEventListeners(
+                        new CommandListener(),
+                        new MessageListener(),
+                        new PrivateMessageListener(),
+                        new MentionListener()
+                )
                 .build()
                 .awaitReady();
 
@@ -93,7 +95,7 @@ public class ProfessorProton {
                             .build()
             );
             Thread t = new Thread(new UpdateGuildMessageCache(guild, guildCacheMap.get(guild)), "UpdateGuildMessageCache");
-            t.run();
+            t.start();
         }
 
         // Setup console channel

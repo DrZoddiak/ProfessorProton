@@ -3,8 +3,8 @@ package io.github.nucleuspowered.proton.listener;
 import io.github.nucleuspowered.proton.ProfessorProton;
 import io.github.nucleuspowered.proton.task.DuplicateMessageCheck;
 import io.github.nucleuspowered.proton.task.JustAskCheck;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.time.Duration;
 import java.time.Instant;
