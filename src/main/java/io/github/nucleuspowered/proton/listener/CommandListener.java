@@ -11,7 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public class CommandListener extends ListenerAdapter {
 
-    @Override public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+    @Override
+    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         // Bots can't control Professor Proton! That would just be silly...
         if (event.getAuthor().isBot()) {
             return;

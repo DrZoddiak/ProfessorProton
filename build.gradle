@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'com.github.johnrengelman.shadow' version '1.2.3'
     id "de.sebastianboegl.shadow.transformer.log4j" version "2.1.1"
+    id "io.freefair.lombok" version "4.1.0"
 }
 
 group = 'io.github.nucleuspowered.proton'
@@ -38,15 +39,18 @@ compileJava {
 }
 
 dependencies {
+    implementation("net.dv8tion:JDA:4.0.0_39")
+    implementation("com.jagrosh:jda-utilities:3.0.2")
+    implementation("com.h2database:h2:1.4.199")
     compile("com.google.cloud:google-cloud-dialogflow:0.45.0-alpha")
     compile("org.apache.commons:commons-text:1.1")
     compile("org.apache.logging.log4j:log4j-api:2.11.0")
     compile("org.apache.logging.log4j:log4j-core:2.11.0")
     runtime("org.apache.logging.log4j:log4j-slf4j-impl:2.11.0")
-    implementation("net.dv8tion:JDA:4.0.0_39")
     compile("ninja.leaping.configurate:configurate-hocon:3.3")
     compile("com.github.ben-manes.caffeine:caffeine:2.6.2")
-    compile("com.h2database:h2:1.4.197")
+    compileOnly("org.projectlombok:lombok:1.18.10")
+    annotationProcessor("org.projectlombok:lombok:1.18.10")
 }
 
 shadowJar {

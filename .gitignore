@@ -3,3 +3,6 @@
 out/
 run/
 build/
+local.properties
+ProfessorProton.iml
+lombok.config

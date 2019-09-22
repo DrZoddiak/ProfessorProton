@@ -6,16 +6,11 @@ import io.github.nucleuspowered.proton.task.JustAskCheck;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Optional;
-
 public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        // Professor Proton is always above reproach!
-        if (event.getAuthor().isBot()) {
+        if (event.getAuthor().isBot() || event.getMember() == null) {
             return;
         }
 
@@ -30,17 +25,7 @@ public class MessageListener extends ListenerAdapter {
         }
 
         // Check if the user has been recently warned
-        Optional<Instant> lastWarning = ProfessorProton.getInstance().getLastWarning(event.getAuthor());
-        boolean suppressWarnings = false;
-        if (lastWarning.isPresent() && Duration.between(lastWarning.get(), Instant.now()).getSeconds()
-                <= ProfessorProton.getInstance().getConfig().getWarningCooldown()) {
-            // Ignore the user's message
-            ProfessorProton.LOGGER.debug("{}'s last warning: {} sec(s). Warnings will be suppressed.",
-                    event.getMember().getEffectiveName(),
-                    Duration.between(lastWarning.get(), Instant.now()).getSeconds()
-            );
-            suppressWarnings = true;
-        }
+        boolean suppressWarnings = ProfessorProton.getInstance().shouldSuppressWarnings(event.getMember());
 
         // Duplicate Message Check
         // Only check members without a role, when enabled
@@ -54,4 +39,5 @@ public class MessageListener extends ListenerAdapter {
             new Thread(new JustAskCheck(event, suppressWarnings), "just-ask").start();
         }
     }
+
 }

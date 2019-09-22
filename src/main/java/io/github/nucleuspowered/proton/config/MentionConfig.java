@@ -1,8 +1,10 @@
 package io.github.nucleuspowered.proton.config;
 
+import lombok.Getter;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
+@Getter
 @ConfigSerializable
 public class MentionConfig {
 
@@ -13,16 +15,6 @@ public class MentionConfig {
             + "Please review <#ID> for more details.";
     @Setting
     private String everyoneMessage = "{{user}} you just tried to mention {{members}} members! That is incredibly rude. Please be patient.";
-
-    public boolean isWarnOnMention() {
-        return warnOnMention;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getEveryoneMessage() {
-        return everyoneMessage;
-    }
+    @Setting
+    private int spamThreshold = 3;
 }

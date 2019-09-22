@@ -2,6 +2,7 @@ package io.github.nucleuspowered.proton.task;
 
 import io.github.nucleuspowered.proton.ProfessorProton;
 import io.github.nucleuspowered.proton.config.DuplicateMessageConfig;
+import io.github.nucleuspowered.proton.data.Warning;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -48,6 +49,12 @@ public class DuplicateMessageCheck extends BaseTask {
                 event.getChannel().sendMessage(config.getMessage().replace("{{user}}", event.getMember().getAsMention())).queue();
                 ProfessorProton.getInstance().getLastWarning().put(event.getAuthor(), event.getMessage().getTimeCreated().toInstant());
             }
+            ProfessorProton.getInstance().getDatabase().logWarning(new Warning(
+                    event.getAuthor().getIdLong(),
+                    event.getMessage().getTimeCreated(),
+                    "Duplicate Message",
+                    event.getMessage().getContentRaw()
+            ));
             ProfessorProton.getInstance().getConsole().ifPresent(c -> c.sendMessage(new EmbedBuilder()
                     .setTitle("Detected duplicate messages")
                     .setThumbnail(event.getAuthor().getAvatarUrl())

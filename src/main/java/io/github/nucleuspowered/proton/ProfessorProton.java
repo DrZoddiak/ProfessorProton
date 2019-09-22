@@ -3,8 +3,14 @@ package io.github.nucleuspowered.proton;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.api.client.util.Maps;
+import com.jagrosh.jdautilities.command.CommandClient;
+import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import io.github.nucleuspowered.proton.command.QuarantineCommand;
+import io.github.nucleuspowered.proton.command.WarningCommand;
 import io.github.nucleuspowered.proton.config.BotConfig;
 import io.github.nucleuspowered.proton.config.ConfigManager;
+import io.github.nucleuspowered.proton.data.Database;
+import io.github.nucleuspowered.proton.data.H2Database;
 import io.github.nucleuspowered.proton.listener.CommandListener;
 import io.github.nucleuspowered.proton.listener.MentionListener;
 import io.github.nucleuspowered.proton.listener.MessageListener;
@@ -15,6 +21,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -26,6 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +57,8 @@ public class ProfessorProton {
 
     private Map<User, Instant> lastWarning = Maps.newHashMap();
 
+    private Database database;
+
     public static void main(String[] args) {
         instance = new ProfessorProton();
     }
@@ -57,6 +67,7 @@ public class ProfessorProton {
         LOGGER.info("Professor Proton is now loading.");
         initConfig();
         try {
+            database = new H2Database();
             initDiscordBot();
         } catch (Exception e) {
             LOGGER.error("Error initializing Discord bot instance.", e);
@@ -73,10 +84,17 @@ public class ProfessorProton {
     }
 
     private void initDiscordBot() throws LoginException, InterruptedException {
+        CommandClient commandClient = new CommandClientBuilder()
+                .setOwnerId(getConfig().getOwnerId())
+                .setPrefix(getConfig().getCommand().getPrefix())
+                .addCommand(new WarningCommand())
+                .addCommand(new QuarantineCommand())
+                .build();
         jda = new JDABuilder(AccountType.BOT)
                 .setToken(config.getDiscord().getToken())
                 .setActivity(Activity.playing(config.getDiscord().getGame()))
                 .addEventListeners(
+                        commandClient,
                         new CommandListener(),
                         new MessageListener(),
                         new PrivateMessageListener(),
@@ -111,6 +129,23 @@ public class ProfessorProton {
         }));
     }
 
+    public boolean shouldSuppressWarnings(Member member) {
+        Optional<Instant> lastWarning = Optional.ofNullable(this.lastWarning.get(member.getUser()));
+        boolean suppressWarnings = false;
+        if (lastWarning.isPresent()) {
+            final long secondsSinceLastWarning = Duration.between(lastWarning.get(), Instant.now()).getSeconds();
+            if (secondsSinceLastWarning <= this.getConfig().getWarningCooldown()) {
+                // Ignore the user's message
+                LOGGER.debug("{}'s last warning: {} sec(s). Warnings will be suppressed.",
+                        member.getEffectiveName(),
+                        secondsSinceLastWarning
+                );
+                suppressWarnings = true;
+            }
+        }
+        return suppressWarnings;
+    }
+
     public static ProfessorProton getInstance() {
         return instance;
     }
@@ -123,12 +158,12 @@ public class ProfessorProton {
         return guildCacheMap.get(guild);
     }
 
-    public Map<User, Instant> getLastWarning() {
-        return lastWarning;
+    public Database getDatabase() {
+        return database;
     }
 
-    public Optional<Instant> getLastWarning(User user) {
-        return Optional.ofNullable(lastWarning.get(user));
+    public Map<User, Instant> getLastWarning() {
+        return lastWarning;
     }
 
     public BotConfig getConfig() {

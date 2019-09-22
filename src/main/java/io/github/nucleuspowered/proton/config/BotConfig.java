@@ -1,7 +1,11 @@
 package io.github.nucleuspowered.proton.config;
 
+import io.github.nucleuspowered.proton.ProfessorProton;
+import net.dv8tion.jda.api.entities.Role;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+
+import java.util.Optional;
 
 @ConfigSerializable
 public class BotConfig {
@@ -20,6 +24,10 @@ public class BotConfig {
     private DuplicateMessageConfig duplicateMessage = new DuplicateMessageConfig();
     @Setting
     private JustAskConfig justAsk = new JustAskConfig();
+    @Setting
+    private String ownerId = "";
+    @Setting
+    private String quarantineRoleId = "";
     @Setting
     private int warningCooldown = 10;
 
@@ -49,6 +57,14 @@ public class BotConfig {
 
     public JustAskConfig getJustAsk() {
         return justAsk;
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public Optional<Role> getQuarantineRole() {
+        return Optional.ofNullable(ProfessorProton.getInstance().getBot().getRoleById(quarantineRoleId));
     }
 
     public int getWarningCooldown() {

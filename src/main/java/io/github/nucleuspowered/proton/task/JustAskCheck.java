@@ -2,6 +2,7 @@ package io.github.nucleuspowered.proton.task;
 
 import io.github.nucleuspowered.proton.ProfessorProton;
 import io.github.nucleuspowered.proton.config.JustAskConfig;
+import io.github.nucleuspowered.proton.data.Warning;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +35,12 @@ public class JustAskCheck extends BaseTask {
                         event.getChannel().sendMessage(config.getMessage().replace("{{user}}", event.getMember().getAsMention())).queue();
                         ProfessorProton.getInstance().getLastWarning().put(event.getAuthor(), event.getMessage().getTimeCreated().toInstant());
                     }
+                    ProfessorProton.getInstance().getDatabase().logWarning(new Warning(
+                            event.getAuthor().getIdLong(),
+                            event.getMessage().getTimeCreated(),
+                            "Asking to Ask",
+                            event.getMessage().getContentRaw()
+                    ));
                     ProfessorProton.getInstance().getConsole().ifPresent(c -> c.sendMessage(new EmbedBuilder()
                             .setTitle("Detected \"asking to ask\"")
                             .setThumbnail(event.getAuthor().getAvatarUrl())
